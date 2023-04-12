@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChillCast</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.17/tailwind.min.css">
+</head>
+<body class="bg-black">
+    <img class="w-10/12 mx-auto" src="coverpic.png" alt="CHILLCAST">
+    <div class="max-w-7xl mx-auto py-12 px-8">
+        <!-- <h1 class="text-4xl font-bold text-gray-800 mb-4">Random Quote Generator</h1> -->
+        <h1 class="text-xl text-center font-semibold my-16 text-white animate-pulse">Citations to uplift your spirits and provide insight into life's most profound question </h1>
+        <div class="max-w-7xl  mx-auto bg-gradient-to-r from-blue-600 via-white to-pink-600 rounded-lg shadow-lg p-6">
+            <div class="text-lg font-bold mb-4 text-center" id="quote-text"></div>
+            <div class="text-base text-black text-center" id="quote-author"></div>
+        </div>
+    </div>
+    <h1 class="text-center text-4xl font-semibold text-white animate-bounce mt-16 mb-16">Explore weather, news and music with us</h1>
+    <!-- <div class="flex space-x-24 mx-auto justify-center mb-20 bg-blue-100 py-10"> -->
+        <div class="bg-blue-100 py-10 mb-20 pl-48 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- <div class="flex fixed"> -->
+            <a href="weather.html"><img class="w-64 h-64  hover:opacity-50" src="weatherpic.png" alt="Poster"></a>
+        <!-- <div class="touch font-sans font-bold text-9xl text-center py-24 ml-72 mr-44 content-center  text-black relative">  MUSICS   </div> -->
+        <a href="news.html"><img class="w-64 h-64 hover:opacity-50" src="newspic.png" alt="Poster"></a>
+        <a href="music.html"><img class=" w-64 h-64 hover:opacity-50 " src="musicpic.png" alt="Poster"></a>
+        </div>
+    <!-- </div> -->
+        <footer
+  class="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left">
+  <div class="p-4 text-center  bg-blue-700 text-white">
+    Made with love❤️
+  </div>
+</footer>
+    
+
+    <script>
+        const quoteText = document.getElementById('quote-text');
+        const quoteAuthor = document.getElementById('quote-author');
+
+        function getQuote() {
+            fetch('https://type.fit/api/quotes')
+                .then(response => response.json())
+                .then(data => {
+                    const randomIndex = Math.floor(Math.random() * data.length);
+                    const quote = data[randomIndex];
+                    quoteText.textContent = quote.text;
+                    quoteAuthor.textContent = quote.author || 'Unknown';
+                })
+                .catch(error => {
+                    console.log(error);
+                    quoteText.textContent = 'Failed to fetch quote';
+                });
+        }
+
+        getQuote();
+        setInterval(getQuote, 10000); // Change quote every 10 seconds
+        
+    </script>
+</body>
+</html>

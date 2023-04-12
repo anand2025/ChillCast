@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How's the Weather</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.17/tailwind.min.css">
+</head>
+<body >
+    <div class="flex">
+        <div class="flex fixed">
+        <img class=" w-72 h-screen" src="sideband.jpg" alt="Poster">
+        <div class=" touch font-sans font-bold text-9xl text-center py-24 ml-72 mr-44 content-center text-white relative">  WEATHE   </div>
+        <img class=" w-72 h-screen  " src="sideband.jpg" alt="Poster">
+        </div>
+        <div class=" absolute justify-center mt-12 ml-96 pl-28">
+
+
+    <div class="max-w-7xl mx-auto py-12 px-8">
+        <h1 class="text-5xl font-bold text-gray-800 mb-4 justify-center text-center animate-bounce font-cursive">How's the weather</h1>
+        <div class="text-center mt-5">
+            <h1 class="text-3xl font-bold mb-2" id="time"></h1>
+            <h2 class="text-xl font-medium mb-2" id="day"></h2>
+            <h3 class="text-lg font-medium mb-10" id="date"></h3>
+          </div>
+          
+          
+        <div class="max-w-lg mx-auto bg-blue-200 rounded-lg shadow-5xl shadow-black p-16 mb-8">
+            <h2 class="text-lg font-bold mb-4">Enter a city name:</h2>
+            <form id="search-form" class="flex">
+                <input id="city-input" type="text" class="rounded-l-lg p-4 border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-white" placeholder="City" required>
+                <button id="search-btn" type="submit" class="cursor-pointer px-8 rounded-r-lg animate-pulse bg-blue-700 hover:bg-blue-900 text-white font-bold p-4 uppercase border-blue-500 border-t border-b border-r">Search</button>
+            </form>
+        </div>
+        <div id="weather-info" class="max-w-sm mx-auto bg-white rounded-lg shadow-xl shadow-black p-6 hidden">
+            <h2 class="text-5xl font-bold mb-4" id="city-name"></h2>
+            <div class="flex justify-between items-center">
+                <img class="w-60" id="weather-icon" src="" alt="">
+                <div class="text-5xl font-bold text-gray-800">
+                    <span id="temp"></span>°C
+                </div>
+            </div>
+            <div id="weather-desc" class=" mt-4 text-blue-600 text-lg"></div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+       const timeElement = document.getElementById('time');
+const dayElement = document.getElementById('day');
+const dateElement = document.getElementById('date');
+
+function updateTime() {
+  const now = new Date();
+  
+  // Format the time using 12 hour clock format
+  const hours = now.getHours() % 12 || 12;
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const meridiem = now.getHours() >= 12 ? 'PM' : 'AM';
+  const timeString = `${hours}:${minutes} ${meridiem}`;
+  
+  // Get the day of the week and format it as a string
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayOfWeekString = daysOfWeek[now.getDay()];
+  
+  // Get the date and format it as a string
+  const dateString = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  
+  // Set the text content of the elements to the formatted values
+  timeElement.textContent = timeString;
+  dayElement.textContent = dayOfWeekString;
+  dateElement.textContent = dateString;
+}
+
+// Update the time initially
+updateTime();
+
+// Update the time every second
+setInterval(updateTime, 1000);
+
+
+        const searchForm = document.getElementById('search-form');
+        const cityInput = document.getElementById('city-input');
+        const weatherInfo = document.getElementById('weather-info');
+        const cityName = document.getElementById('city-name');
+        const temp = document.getElementById('temp');
+        const weatherIcon = document.getElementById('weather-icon');
+        const weatherDesc = document.getElementById('weather-desc');
+
+        searchForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const city = cityInput.value;
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=2e5fef8cd2cdb7cd606e920497da9d14`)
+                .then(response => response.json())
+                .then(data => {
+                    cityName.textContent = data.name;
+                    temp.textContent = Math.round(data.main.temp);
+                    weatherIcon.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+                    weatherDesc.textContent = data.weather[0].description;
+                    weatherInfo.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.log(error);
+                    alert('Could not retrieve weather information');
+                });
+        });
+    </script>
+</body>
+</html>

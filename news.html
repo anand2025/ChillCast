@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.17/tailwind.min.css">
+</head>
+<body class="bg-blue-200">
+    <div class="max-w-7xl py-12 px-8">
+        <h1 class="text-5xl ml-96 font-bold text-blue-800 mb-10  animate-bounce">Stay informed, stay ahead !!!</h1>
+        <p class="ml-48 text-lg mb-10">Welcome to our news website, where you can stay up-to-date with the latest stories and breaking news from around the world. From politics to entertainment, from technology to sports, we cover it all. Our team of expert journalists works tirelessly to bring you accurate, unbiased, and timely news that you can trust. With our easy-to-use interface , you can search for the news according to s your interests and preferences. Join us on this journey of discovery and enlightenment, as we bring you the most compelling stories of our time.</p>
+        <div class="max-w-7xl ml-52  bg-white rounded-lg shadow-3xl p-6 mb-8 justify-center content-center">
+            <h2 class="text-lg font-semibold mb-4">Enter a keyword to search for related news:</h2>
+            <form id="search-form" class="flex">
+                <input id="keyword-input" type="text" class="rounded-l-lg pl-4 pr-96 border-t max-w-6xl ml-32 text-gray-800 bg-white" placeholder="Keyword" required>
+                <button id="search-btn" type="submit" class="px-10 rounded-r-lg bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 uppercase border-blue-500 border-t border-b border-r">Search</button>
+            </form>
+        </div>
+        <div id="news-list" class=" pl-48 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </div>
+    </div>
+
+    <script>
+        const searchForm = document.getElementById('search-form');
+        const keywordInput = document.getElementById('keyword-input');
+        const newsList = document.getElementById('news-list');
+
+        searchForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const keyword = keywordInput.value;
+            fetch(`https://newsapi.org/v2/everything?q=${keyword}&sortBy=publishedAt&apiKey=88a9848fe1994946a2be803f8a7e1b1b`)
+                .then(response => response.json())
+                .then(data => {
+                    let newsHTML = '';
+                    data.articles.forEach(article => {
+                        newsHTML += `
+                            <div class="bg-white rounded-lg shadow-lg p-6">
+                                <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                                    <img src="${article.urlToImage}" alt="" class="mb-4">
+                                    <h2 class="text-lg font-bold mb-2">${article.title}</h2>
+                                    <p class="text-gray-600">${article.description}</p>
+                                </a>
+                            </div>
+                        `;
+                    });
+                    newsList.innerHTML = newsHTML;
+                })
+                .catch(error => {
+                    console.log(error);
+                    alert('Could not retrieve news');
+                });
+        });
+    </script>
+</body>
+</html>
