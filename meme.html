@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Laugh out Loud</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css"
+    />
+    <style>
+      .image-container {
+        max-width: 500px;
+        max-height: 500px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body class="h-screen bg-gradient-to-b from-purple-200 to-purple-700">
+    <div class="container mx-auto py-8">
+      <div class="flex flex-col items-center mb-8">
+        <h1 class="text-6xl text-purple-900 mb-8  font-extrabold justify-center content-center animate-bounce">Laugh out Loud with memes</h1>
+        <p class="text-purple-1000 justify-center content-center ml-48 mr-48">Are you tired of the same old memes? Want to spice up your social media feeds with something fresh and funny? Look no further than our website! With just one click, you'll be treated to a hilarious and completely random meme that will have you ROFL-ing in no time. Who knows what kind of meme-sterpiece you'll discover next? Give it a try and keep your meme game on point</p>
+        <button
+          id="generate-meme"
+          class="bg-purple-700 hover:bg-purple-500 text-white font-bold py-4 px-8 rounded focus:outline-none focus:shadow-outline mt-10 mb-10"
+        >
+          Generate Meme
+        </button>
+
+        <div class="image-container">
+          <img
+            id="meme-image"
+            src="https://via.placeholder.com/500x500.png?text=Loading..."
+            alt="Meme image"
+            class="rounded-lg mb-4"
+          />
+        </div>
+      </div>
+    </div>
+    <script>
+      const generateMemeBtn = document.getElementById("generate-meme");
+      const memeImage = document.getElementById("meme-image");
+
+      generateMemeBtn.addEventListener("click", () => {
+        fetch("https://api.imgflip.com/get_memes")
+          .then((response) => response.json())
+          .then((data) => {
+            const randomIndex = Math.floor(
+              Math.random() * data.data.memes.length
+            );
+            const randomMeme = data.data.memes[randomIndex];
+            memeImage.src = randomMeme.url;
+            memeImage.alt = randomMeme.name;
+          })
+          .catch((error) => console.error(error));
+      });
+    </script>
+  </body>
+</html>
